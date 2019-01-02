@@ -25,7 +25,7 @@ mmCb (posX, posY, event) {
 */
 
 R.MM = function (o) {
-    this.el = S.Is.def(o.element) ? R.Select.el(o.element)[0] : document
+    this.el = R.Is.def(o.element) ? R.Select.el(o.element)[0] : document
     this.cb = o.cb
     this.iM = R.Snif.isMobile
     this.tick = false
