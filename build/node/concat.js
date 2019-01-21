@@ -26,7 +26,8 @@ const srcArr = [
     'src/Scroll/ScrollToTop.js',
     'src/Scroll/ScrollTo.js',
     'src/Scroll/ScrollZero.js',
-    'src/Scroll/TopRefresh.js'
+    'src/Scroll/TopRefresh.js',
+    'src/Helper/C.js' // color helper
 ]
 
 const dist = 'r.js'

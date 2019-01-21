@@ -33,6 +33,7 @@ scaleY
 opacity
 height
 width
+color
 
 SVG
 ───
@@ -57,6 +58,13 @@ this.anim = new R.M({el: '#id', p: {x: [0, 600, 'px']}, d: 2000, e: 'o4'})
 this.anim.play()
 
 this.anim.play({p: {x: {newEnd: 50}}, reverse: true})
+
+COLOR EXAMPLE
+───────────────────
+
+this.colorAnim = new R.M({el: '#id', p: {c: ['#000', '#fff']}, d: 2000, e: 'o4'})
+
+this.colorAnim.play()
 
 MORPHING JS EXAMPLE
 ───────────────────
@@ -134,11 +142,11 @@ R.M.prototype = {
         var v = {
             el: R.Select.el(o.el),
             e: {
-                value: o.e || 'linear'
+                value: o.e || 'linear',
             },
             d: {
                 origin: o.d || 0,
-                curr: 0
+                curr: 0,
             },
             delay: o.delay || 0,
             cb: o.cb || false,
@@ -147,14 +155,16 @@ R.M.prototype = {
             round: o.round,
             progress: 0,
             time: {
-                elapsed: 0
-            }
+                elapsed: 0,
+            },
         }
         v.elL = v.el.length
 
         // Update
         if (R.Has(o, 'update')) {
-            v.update = function () {o.update(v)}
+            v.update = function () {
+                o.update(v)
+            }
         } else if (R.Has(o, 'svg')) {
             v.update = this.upSvg
         } else if (R.Has(o, 'line')) {
@@ -170,6 +180,18 @@ R.M.prototype = {
         // Prop
         var hasR = false
         if (p) {
+            var sc = {}
+            var ec = {}
+            if (p.hasOwnProperty('c') && p['c'][0] && p['c'][1]) {
+                sc = (new R.C(p['c'][0])).toRgb();
+                ec = (new R.C(p['c'][1])).toRgb();
+
+                R.rgbck.forEach(function(ck) {
+                    p[ck] = [sc[ck], ec[ck]];
+                });
+
+                delete p['c'];
+            }
             v.prop = {}
             v.propPos = []
             var keys = Object.keys(p)
@@ -181,20 +203,20 @@ R.M.prototype = {
                     name: key,
                     origin: {
                         start: p[key][0],
-                        end: p[key][1]
+                        end: p[key][1],
                     },
                     curr: p[key][0],
                     start: p[key][0],
                     end: p[key][1],
-                    unit: p[key][2] || '%'
+                    unit: p[key][2] || '%',
                 }
                 // Save position of each prop in prop.arr
-                var fChar = key.charAt(0)
+                var fChar = (R.rgbck.indexOf(key) === -1) ? key.charAt(0) : key
                 var propChar = fChar === 'r' && hasR ? 'r2' : fChar
                 hasR = fChar === 'r'
                 v.propPos[propChar] = i
             }
-        // Svg
+            // Svg
         } else if (s) {
             v.svg = {
                 type: s.type,
@@ -211,23 +233,23 @@ R.M.prototype = {
             v.svg.arr.start = v.svg.originArr.start
             v.svg.arr.end = v.svg.originArr.end
             v.svg.arrL = v.svg.arr.start.length
-        // Line
+            // Line
         } else if (l) {
             v.line = {
                 elWL: l.elWithLength,
                 dashed: l.dashed,
                 coeff: {
                     start: l.start !== undefined ? (100 - l.start) / 100 : 1,
-                    end: l.end !== undefined ? (100 - l.end) / 100 : 0
+                    end: l.end !== undefined ? (100 - l.end) / 100 : 0,
                 },
                 shapeL: [],
                 origin: {
                     start: [],
-                    end: []
+                    end: [],
                 },
                 curr: [],
                 start: [],
-                end: []
+                end: [],
             }
 
             for (var i = 0; i < v.elL; i++) {
@@ -258,7 +280,7 @@ R.M.prototype = {
                 v.line.end[i] = v.line.origin.end[i]
             }
 
-            function shapeLength (el) {
+            function shapeLength(el) {
                 if (el.tagName === 'circle') {
                     var radius = el.getAttribute('r')
                     return 2 * radius * Math.PI
@@ -419,6 +441,12 @@ R.M.prototype = {
         var w = R.Has(this.v.propPos, 'w') ? this.v.prop[this.v.propPos['w']].curr + this.v.prop[this.v.propPos['w']].unit : 0
         var h = R.Has(this.v.propPos, 'h') ? this.v.prop[this.v.propPos['h']].curr + this.v.prop[this.v.propPos['h']].unit : 0
 
+        // Color
+        var cr = R.Has(this.v.propPos, R.rgbck[0]) ? this.v.prop[this.v.propPos[R.rgbck[0]]].curr : 0
+        var cg = R.Has(this.v.propPos, R.rgbck[1]) ? this.v.prop[this.v.propPos[R.rgbck[1]]].curr : 0
+        var cb = R.Has(this.v.propPos, R.rgbck[2]) ? this.v.prop[this.v.propPos[R.rgbck[2]]].curr : 0
+        var c = (cr) ? 'rgb('+cr+','+cg+','+cb+')' : ''
+
         // Dom update
         for (var i = 0; i < this.v.elL; i++) {
             if (this.v.el[i] === undefined) break
@@ -433,6 +461,9 @@ R.M.prototype = {
             }
             if (h !== 0) {
                 this.v.el[i].style.height = h
+            }
+            if (c !== '') {
+                this.v.el[i].style.color = c
             }
         }
     },
