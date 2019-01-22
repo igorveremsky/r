@@ -27,7 +27,8 @@ const srcArr = [
     'src/Scroll/ScrollTo.js',
     'src/Scroll/ScrollZero.js',
     'src/Scroll/TopRefresh.js',
-    'src/Helper/C.js' // color helper
+    'src/Helper/C.js', // color helper
+    'src/Helper/bezier-easing.js' // bezier easing
 ]
 
 const dist = 'r.js'
