@@ -371,7 +371,12 @@ R.M.prototype = {
 
         this.v.d.curr = R.Has(o, 'd') ? o.d : this.v.d.origin - this.v.d.curr + this.v.time.elapsed
         this.v.e.value = o.e || this.v.e.value
-        this.v.e.calc = R.Ease[this.v.e.value]
+        if (R.Is.array(this.v.e.value)) {
+            this.v.e.calc = R.Ease[this.v.e.value[0]]
+            this.v.e.props = this.v.e.value[1]
+        } else {
+            this.v.e.calc = R.Ease[this.v.e.value]
+        }
         this.v.delay = R.Has(o, 'delay') ? o.delay : this.v.delay
         this.v.cbDelay = R.Has(o, 'cbDelay') ? o.cbDelay : this.v.cbDelay
         this.v.cb = R.Has(o, 'cb') ? o.cb : this.v.cb
@@ -405,7 +410,7 @@ R.M.prototype = {
     loop: function (now) {
         if (!this.v.time.start) this.v.time.start = now
         this.v.time.elapsed = now - this.v.time.start
-        this.v.progress = this.v.d.curr > 0 ? this.v.e.calc(Math.min(this.v.time.elapsed / this.v.d.curr, 1)) : 1
+        this.v.progress = this.v.d.curr > 0 ? this.v.e.calc(Math.min(this.v.time.elapsed / this.v.d.curr, 1), this.v.e.props) : 1
 
         this.v.update()
 

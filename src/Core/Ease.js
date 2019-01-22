@@ -85,7 +85,10 @@ R.Ease = {
     io6: function (m) {
         if (m === 0) return 0
         if (m === 1) return 1
-        if ((m /= 0.5) < 1) return 0.5 * Math.pow(2, 10 * (m - 1))
+        if ((m /= 0.5) < 1) return 0.5 * Math.pow(2, 10 * d(m - 1))
         return 0.5 * (-Math.pow(2, -10 * --m) + 2)
+    },
+    cb: function (m, cbp) {
+        return bezier(cbp[0], cbp[1], cbp[2], cbp[3])(m)
     }
 }
