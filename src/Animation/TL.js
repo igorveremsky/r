@@ -25,9 +25,13 @@ R.TL = function () {
 
 R.TL.prototype = {
 
-    from: function (o) {
+    from: function (o, timescale) {
         this.delay += R.Has(o, 'delay') ? o.delay : 0
         o.delay = this.delay
+        if (timescale) {
+            o.delay = o.delay*timescale
+            o.d = o.d*timescale
+        }
         this.arr.push(new R.M(o))
     },
 
