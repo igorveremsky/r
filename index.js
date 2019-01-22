@@ -1,7 +1,7 @@
 /**
  * R
  *
- * Version   →  0.0.4.1
+ * Version   →  0.0.5
  * Github    →  https://github.com/ariiiman/r
  * License   →  https://opensource.org/licenses/MIT
  * Author    →  Copyright © 2019 Aristide Benoist
