@@ -258,7 +258,8 @@ R.M.prototype = {
                 var strokeD
                 if (v.line.dashed) {
                     var dashL = 0
-                    var dashArr = dashed.split(/[\s,]/)
+                    var dashed = v.line.dashed
+                    var dashArr = l.dashed.split(/[\s,]/)
                     var dashArrL = dashArr.length
                     for (var j = 0; j < dashArrL; j++) {
                         dashL += parseFloat(dashArr[j]) || 0
@@ -495,9 +496,9 @@ R.M.prototype = {
         for (var i = 0; i < this.v.elL; i++) {
             var elS = this.v.el[i].style
             this.v.line.curr[i] = this.lerp(this.v.line.start[i], this.v.line.end[i])
-            elR.strokeDashoffset = this.v.line.curr[i]
+            elS.strokeDashoffset = this.v.line.curr[i]
             if (this.v.progress === 0) {
-                elR.opacity = 1
+                elS.opacity = 1
             }
         }
     },
